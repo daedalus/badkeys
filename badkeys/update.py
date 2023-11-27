@@ -11,7 +11,7 @@ def update_bl(lookup=False):
     UPDATEURL = "https://update.badkeys.info/"
     BKFORMAT = 0
 
-    cachedir = str(pathlib.Path.home()) + "/.cache/badkeys/"
+    cachedir = f"{str(pathlib.Path.home())}/.cache/badkeys/"
     if not os.path.exists(cachedir):
         pathlib.Path(cachedir).mkdir(parents=True)
 
@@ -19,9 +19,7 @@ def update_bl(lookup=False):
     bkdata = urllib.request.urlopen(jurl).read().decode()
     bkdata_old = ""
     if os.path.exists(f"{cachedir}badkeysdata.json"):
-        with open(f"{cachedir}badkeysdata.json") as f:
-            bkdata_old = f.read()
-
+        bkdata_old = pathlib.Path(f"{cachedir}badkeysdata.json").read_text()
     data = json.loads(bkdata)
     if data["bkformat"] != BKFORMAT:
         sys.exit("ERROR: Wrong format")

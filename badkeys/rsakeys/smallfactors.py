@@ -19,6 +19,4 @@ def smallfactors(n, e=0):
         _smallprimes = sp
 
     factor = gmpy2.gcd(_smallprimes, n)
-    if factor != 1:
-        return {"p": int(factor), "q": int(n // factor)}
-    return False
+    return {"p": int(factor), "q": int(n // factor)} if factor != 1 else False

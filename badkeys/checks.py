@@ -72,11 +72,14 @@ def _checkkey(key, checks):
         r["y"] = key.public_numbers().y
         r["bits"] = key.key_size
         r["results"] = checkall(r["y"], checks=checks)
-    elif (
-        isinstance(key, ed25519.Ed25519PublicKey)
-        or isinstance(key, x25519.X25519PublicKey)
-        or isinstance(key, x448.X448PublicKey)
-        or isinstance(key, ed448.Ed448PublicKey)
+    elif isinstance(
+        key,
+        (
+            ed25519.Ed25519PublicKey,
+            x25519.X25519PublicKey,
+            x448.X448PublicKey,
+            ed448.Ed448PublicKey,
+        ),
     ):
         r["type"] = "ec"
         # For Ed25519 the raw key is the x coordinate

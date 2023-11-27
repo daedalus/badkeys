@@ -5,7 +5,4 @@ _prex = re.compile(r"(..)\1{15}")
 
 
 def pattern(n, e=0):
-    r = _prex.search(f"{n:02x}")
-    if r:
-        return {"detected": True}
-    return False
+    return {"detected": True} if (r := _prex.search(f"{n:02x}")) else False

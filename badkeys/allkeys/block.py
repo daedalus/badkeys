@@ -12,7 +12,7 @@ _blextra = []
 def _loadblmeta():
     global _blmeta
     mlist = {}
-    cachedir = str(pathlib.Path.home()) + "/.cache/badkeys/"
+    cachedir = f"{str(pathlib.Path.home())}/.cache/badkeys/"
     try:
         with open(f"{cachedir}badkeysdata.json") as f:
             jdata = json.loads(f.read())
@@ -32,17 +32,14 @@ def _checkbl(bldata, s256trunc):
         val = bldata[fmiddle * 16 : fmiddle * 16 + 15]
         if s256trunc == val:
             bl_id = int(bldata[fmiddle * 16 + 15])
-            if bl_id in _blmeta:
-                subtest = _blmeta[bl_id]["name"]
-            else:
-                subtest = f"id{bl_id}"
-            lhash = s256trunc[0:8].hex()
+            subtest = _blmeta[bl_id]["name"] if bl_id in _blmeta else f"id{bl_id}"
+            lhash = s256trunc[:8].hex()
             return {
                 "detected": True,
                 "subtest": subtest,
                 "blid": bl_id,
                 "lookup": lhash,
-                "debug": "Truncated Hash: %s" % s256trunc.hex(),
+                "debug": f"Truncated Hash: {s256trunc.hex()}",
             }
         if s256trunc > val:
             fbegin = fmiddle + 1
@@ -59,7 +56,7 @@ def blocklist(inval):
         _loadblmeta()
 
     if not _bldata:
-        cachedir = str(pathlib.Path.home()) + "/.cache/badkeys/"
+        cachedir = f"{str(pathlib.Path.home())}/.cache/badkeys/"
         try:
             with open(f"{cachedir}blocklist.dat", "rb") as f:
                 _bldata = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ)
@@ -95,7 +92,7 @@ def urllookup(blid, lhash, type="show"):
     if not _blmeta:
         _loadblmeta()
 
-    lfile = str(pathlib.Path.home()) + "/.cache/badkeys/lookup.txt"
+    lfile = f"{str(pathlib.Path.home())}/.cache/badkeys/lookup.txt"
 
     try:
         with BinaryFileSearch(lfile, sep=";", string_mode=True) as bfs:

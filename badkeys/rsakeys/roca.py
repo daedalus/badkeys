@@ -22,11 +22,10 @@ def roca(element, e=0):
         order_div_prime_power = generator_order // prime_to_power
         g_dash = gmpy2.powmod(generator, order_div_prime_power, modulus)
         h_dash = gmpy2.powmod(element, order_div_prime_power, modulus)
-        found = False
-        for i in range(0, prime_to_power):
-            if gmpy2.powmod(g_dash, i, modulus) == h_dash:
-                found = True
-                break
+        found = any(
+            gmpy2.powmod(g_dash, i, modulus) == h_dash
+            for i in range(0, prime_to_power)
+        )
         if not found:
             return False
     return {"detected": True}

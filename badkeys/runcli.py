@@ -45,8 +45,7 @@ def _printresults(key, where, args):
             sub = f"/{result['subtest']}"
         print(f"{check}{sub} vulnerability, {kn}, {where}")
         if args.url and "lookup" in result:
-            url = urllookup(result["blid"], result["lookup"])
-            if url:
+            if url := urllookup(result["blid"], result["lookup"]):
                 print(url)
         if args.verbose and "debug" in result:
             print(result["debug"])
@@ -174,10 +173,7 @@ def runcli():
         sys.exit(1)
 
     for fn in args.infiles:
-        if fn == "-":
-            f = sys.stdin
-        else:
-            f = open(fn, errors="replace")
+        f = sys.stdin if fn == "-" else open(fn, errors="replace")
         if args.moduli:
             for line in f:
                 count += 1
@@ -188,8 +184,7 @@ def runcli():
                 r["results"] = checkrsa(n, checks=userchecks)
                 _printresults(r, f"modulus {n:02x}", args)
         elif args.crt_lines:
-            lno = 0
-            for line in f:
+            for lno, line in enumerate(f):
                 desc = f"{fn}[{lno}]"
                 ll = re.split("[,; ]", line.rstrip(), maxsplit=1)
                 if len(ll) == 2:
@@ -197,18 +192,15 @@ def runcli():
                 crt = PRECRT + ll[0] + POSTCRT
                 r = checkcrt(crt, checks=userchecks)
                 _printresults(r, desc, args)
-                lno += 1
                 count += 1
         elif args.ssh_lines:
-            lno = 0
-            for line in f:
+            for lno, line in enumerate(f):
                 desc = f"{fn}[{lno}]"
                 ll = line.rstrip().split(" ", 2)
                 if len(ll) == 3:
                     desc += f" {ll[2]}"
                 r = checksshpubkey(line, checks=userchecks)
                 _printresults(r, desc, args)
-                lno += 1
                 count += 1
         else:
             fcontent = f.read(MAXINPUTSIZE)
